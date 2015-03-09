@@ -39,6 +39,7 @@
         than the previous version. Required. -->
     <versionNumber>1.0.0</versionNumber>
     <platformVersion>10.2.0</platformVersion>
+    <authorId>gYAAgPpE4Igm0Dc1X5nDlg9-47Y</authorId>
 
     <!-- Fourth digit segment of the package version. First three segments are
         taken from the <versionNumber> element. Must be an integer from 0 to 2^16-1 -->
@@ -51,14 +52,14 @@
     <!-- Description, displayed in the BlackBerry 10 application installer.
         May have multiple values for each language. See samples or xsd schema file.
         Optional. -->
-    <description>The MyApp application</description>
+    <description>Talk2Watch API</description>
 
     <!-- Copyright information. Optional. -->
     <!-- <copyright></copyright> -->
 
     <!-- Name of author which is used for signing. Must match the developer
         name of your development certificate. -->
-    <author>Example Inc.</author>
+    <author>nhatlu</author>
     <configuration name="Device-Debug">
         <platformArchitecture>armle-v7</platformArchitecture>
         <entryPointType>Qnx/Elf</entryPointType>

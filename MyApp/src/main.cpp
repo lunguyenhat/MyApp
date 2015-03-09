@@ -17,6 +17,7 @@
 #include "applicationui.hpp"
 
 #include <bb/cascades/Application>
+#include <bb/device/BatteryInfo>
 
 #include <QLocale>
 #include <QTranslator>

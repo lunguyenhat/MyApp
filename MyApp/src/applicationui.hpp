@@ -18,6 +18,7 @@
 #define ApplicationUI_HPP_
 
 #include <QObject>
+#include <QStringList>
 
 class Talk2WatchInterface;
 class UdpModule;
@@ -29,6 +30,11 @@ namespace bb {
     namespace system {
         class InvokeManager;
     }
+
+    namespace device {
+        class BatteryInfo;
+    }
+
 }
 
 class QTranslator;
@@ -50,8 +56,10 @@ public:
 private slots:
     void onSystemLanguageChanged();
     void onTransmissionReady();
-    void onUdpDataReceived(QString _data);
+    //void onUdpDataReceived(QString _data);
     void onTimeout();
+    void onAuthSuccess();
+    void onAuthError(const QString &_error);
 
 private:
 
@@ -60,9 +68,14 @@ private:
 
     QString uuid;
 
+    bb::device::BatteryInfo* batteryInfo;
+
     void authorizeAppWithT2w();
     void triggerBattery();
 
+    QStringList title;
+    QStringList command;
+    QStringList description;
 
     QTranslator* m_translator;
     bb::cascades::LocaleHandler* m_localeHandler;

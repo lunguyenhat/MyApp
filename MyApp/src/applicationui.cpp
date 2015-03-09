@@ -23,12 +23,14 @@
 #include <bb/cascades/QmlDocument>
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/LocaleHandler>
-#include <bb/system/InvokeManager>
 
+#include <bb/system/InvokeManager>
+#include <bb/device/BatteryInfo>
 #include <QTimer>
 
 using namespace bb::cascades;
 using namespace bb::system;
+using namespace bb::device;
 
 ApplicationUI::ApplicationUI() :
         QObject(),
@@ -44,8 +46,10 @@ ApplicationUI::ApplicationUI() :
         qWarning() << "Recovering from a failed connect()";
     }
 
-    t2w = new Talk2WatchInterface(8484, this);
+    t2w = new Talk2WatchInterface(9712, this);
     uuid = "688fe407d65c4e8cae57ee7dc3c919c2";
+
+    batteryInfo = new BatteryInfo();
 
     // initial load
     onSystemLanguageChanged();
@@ -68,7 +72,12 @@ ApplicationUI::ApplicationUI() :
     // Create UdpModule object, open a UDP port for communicating with T2W and connect to signal
     udp = new UdpModule(this);
     udp->listenOnPort(9712); // this number should be changed to a random unused port
-    connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
+    //connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
+
+    qDebug() << connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
+    qDebug() << connect(t2w, SIGNAL(authError(QString)), this, SLOT(onAuthError(QString)));
+
+
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -101,7 +110,8 @@ void ApplicationUI::onTransmissionReady()
 
     authorizeAppWithT2w();
 
-    triggerBattery();
+    //onTimeout();
+    //triggerBattery();
 
     //t2w->registerAppMessageListener(uuid);
 }
@@ -109,37 +119,43 @@ void ApplicationUI::onTransmissionReady()
 void ApplicationUI::authorizeAppWithT2w()
 {
     qDebug() << "authorizeAppWithT2w";
-    QString appName = "MyApp";
-    QString version = "1.0" ;
-    QString uuid = "614bf1495f544c618df04ec1ef94dea2";  // Randomly generated online
+    /*QString appName = "MyApp";
+    QString version = "1.0.0" ;
+    QString uuid = "614bf149-5f54-4c61-8df0-4ec1ef94dea2";  // Randomly generated online
     QString t2wAuthUdpPort = "9712";  // This should be set to the same value you used when initiating udpModule Object
     QString description = "Talk2Watch API";
     t2w->setAppValues(appName, version, uuid, "UDP", t2wAuthUdpPort, description);  // Aknowledge T2W of the app infos
+    */
+
+    t2w->setAppValues("NewApp", "0.1", "appKey", "UPD", "9712", "");
+
     t2w->sendAppAuthorizationRequest();  // Send authorization request to T2W
 }
 
-void ApplicationUI::onUdpDataReceived(QString _data)
+void ApplicationUI::onAuthSuccess()
 {
-    qDebug() << _data;
-
-    // This is called after T2W authorize the app
-   /* if(_data=="AUTH_SUCCESS") {
-        qDebug() << "Auth_Success!!!";
-        return;
-    }*/
+    qDebug() << "Auth_Success!!!";
 }
+
+void ApplicationUI::onAuthError(const QString &_error)
+{
+    qDebug() << _error;
+}
+
+
 
 void ApplicationUI::triggerBattery()
 {
-    QTimer *timer = new QTimer(this);
+    /*QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    timer->start(5000);
+    timer->start(60 * 60 * 1000); // one hours*/
 }
 
 void ApplicationUI::onTimeout()
 {
-    qDebug() << "onTimeout";
+   /* qDebug() << "onTimeout";
+
     QHash<QString, QVariant> values;
-    values.insert("4", 3);
-    t2w->sendAppMessage(uuid, values);
+    values.insert("4", batteryInfo->level());
+    t2w->sendAppMessage(uuid, values);*/
 }

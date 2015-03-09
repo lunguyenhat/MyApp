@@ -4,10 +4,22 @@ BASEDIR = $$quote($$_PRO_FILE_PWD_)
 device {
     CONFIG(debug, debug|release) {
         profile {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            LIBS += -lbbdevice
+
             CONFIG += \
                 config_pri_assets \
                 config_pri_source_group1
         } else {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            LIBS += -lbbdevice
+
             CONFIG += \
                 config_pri_assets \
                 config_pri_source_group1
@@ -17,6 +29,12 @@ device {
 
     CONFIG(release, debug|release) {
         !profile {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            LIBS += -lbbdevice
+
             CONFIG += \
                 config_pri_assets \
                 config_pri_source_group1
@@ -27,6 +45,12 @@ device {
 simulator {
     CONFIG(debug, debug|release) {
         !profile {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device)
+
+            LIBS += -lbbdevice
+
             CONFIG += \
                 config_pri_assets \
                 config_pri_source_group1
@@ -58,10 +82,6 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/T2W API/UdpModule.h) \
         $$quote($$BASEDIR/src/applicationui.hpp)
 }
-
-INCLUDEPATH += $$quote($$BASEDIR/src/T2W API) \
-    $$quote($$BASEDIR/src) \
-    $$quote($$BASEDIR/src/T2W API/PebbleNotifications)
 
 CONFIG += precompile_header
 
