@@ -59,6 +59,10 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/applicationui.hpp)
 }
 
+INCLUDEPATH += $$quote($$BASEDIR/src/T2W API) \
+    $$quote($$BASEDIR/src) \
+    $$quote($$BASEDIR/src/T2W API/PebbleNotifications)
+
 CONFIG += precompile_header
 
 PRECOMPILED_HEADER = $$quote($$BASEDIR/precompiled.h)
