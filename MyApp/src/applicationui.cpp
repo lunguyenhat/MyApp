@@ -68,16 +68,13 @@ ApplicationUI::ApplicationUI() :
     Application::instance()->setScene(root);
 
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
+    connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
+    connect(t2w, SIGNAL(uuidRegistrationSuccess(QString)), this, SLOT(onUuidRegistrationSuccess(QString)));
+    connect(t2w, SIGNAL(appMessageReceived(QString, QHash)), this, SLOT(onAppMessageReceived(QString, QHash)));
 
     // Create UdpModule object, open a UDP port for communicating with T2W and connect to signal
     udp = new UdpModule(this);
     udp->listenOnPort(9712); // this number should be changed to a random unused port
-    //connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
-
-    qDebug() << connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
-    qDebug() << connect(t2w, SIGNAL(authError(QString)), this, SLOT(onAuthError(QString)));
-
-
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -104,37 +101,23 @@ void ApplicationUI::onTransmissionReady()
 {
     qDebug() << "onTransmissionReady -- HL";
 
-    /*QHash<QString, QVariant> values;
-    values.insert("4", 3);
-    t2w->sendAppMessage(uuid, values);*/
-
     authorizeAppWithT2w();
-
     //onTimeout();
     //triggerBattery();
-
-    //t2w->registerAppMessageListener(uuid);
 }
 
 void ApplicationUI::authorizeAppWithT2w()
 {
     qDebug() << "authorizeAppWithT2w";
-    /*QString appName = "MyApp";
-    QString version = "1.0.0" ;
-    QString uuid = "614bf149-5f54-4c61-8df0-4ec1ef94dea2";  // Randomly generated online
-    QString t2wAuthUdpPort = "9712";  // This should be set to the same value you used when initiating udpModule Object
-    QString description = "Talk2Watch API";
-    t2w->setAppValues(appName, version, uuid, "UDP", t2wAuthUdpPort, description);  // Aknowledge T2W of the app infos
-    */
-
-    t2w->setAppValues("NewApp", "0.1", "appKey", "UPD", "9712", "");
-
+    t2w->setAppValues("MyApp", "1.0.0", "MyApp1.0.0", "UPD", "9712", "");
     t2w->sendAppAuthorizationRequest();  // Send authorization request to T2W
 }
 
 void ApplicationUI::onAuthSuccess()
 {
     qDebug() << "Auth_Success!!!";
+
+    t2w->registerAppMessageListener(uuid);
 }
 
 void ApplicationUI::onAuthError(const QString &_error)
@@ -142,20 +125,30 @@ void ApplicationUI::onAuthError(const QString &_error)
     qDebug() << _error;
 }
 
+void ApplicationUI::onUuidRegistrationSuccess(const QString &_uuid)
+{
+    qDebug() << "OnuuidRegistrationSuccess";
+}
 
+void ApplicationUI::onAppMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values)
+{
+    qDebug() << "onAppMessageReceived";
+
+    qDebug() << _values;
+}
 
 void ApplicationUI::triggerBattery()
 {
-    /*QTimer *timer = new QTimer(this);
+    QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    timer->start(60 * 60 * 1000); // one hours*/
+    timer->start(60 * 60 * 1000); // one hour*/
 }
 
 void ApplicationUI::onTimeout()
 {
-   /* qDebug() << "onTimeout";
+    qDebug() << "onTimeout";
 
     QHash<QString, QVariant> values;
     values.insert("4", batteryInfo->level());
-    t2w->sendAppMessage(uuid, values);*/
+    t2w->sendAppMessage(uuid, values);
 }

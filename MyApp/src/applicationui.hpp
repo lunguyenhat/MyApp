@@ -60,6 +60,8 @@ private slots:
     void onTimeout();
     void onAuthSuccess();
     void onAuthError(const QString &_error);
+    void onUuidRegistrationSuccess(const QString &_uuid);
+    void onAppMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
 
 private:
 
