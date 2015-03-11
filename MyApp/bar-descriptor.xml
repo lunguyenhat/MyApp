@@ -165,6 +165,7 @@
 
     <!-- Request permission to post notification. -->
     <permission>post_notification</permission>
+    <permission>access_notify_settings_control</permission>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib" />
 
 </qnx>

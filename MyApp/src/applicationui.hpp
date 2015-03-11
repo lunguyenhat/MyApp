@@ -19,12 +19,14 @@
 
 #include <QObject>
 #include <QStringList>
+#include <bb/device/BatteryChargingState>
 
 class Talk2WatchInterface;
 class UdpModule;
 
 namespace bb {
     namespace cascades {
+        class Application;
         class LocaleHandler;
     }
     namespace system {
@@ -33,6 +35,11 @@ namespace bb {
 
     namespace device {
         class BatteryInfo;
+        class BatteryChargingState;
+    }
+
+    namespace platform {
+        class NotificationGlobalSettings;
     }
 
 }
@@ -48,32 +55,35 @@ class ApplicationUI: public QObject
 {
     Q_OBJECT
 public:
-    ApplicationUI();
+    ApplicationUI(bb::cascades::Application *app);
     virtual ~ApplicationUI() { }
 
     Q_INVOKABLE void resendNotification();
 
 private slots:
     void onSystemLanguageChanged();
+    void onManualExit();
+
     void onTransmissionReady();
-    //void onUdpDataReceived(QString _data);
-    void onTimeout();
     void onAuthSuccess();
-    void onAuthError(const QString &_error);
     void onUuidRegistrationSuccess(const QString &_uuid);
     void onAppMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
+
+    void onBatteryLevelChanged(int level, bb::device::BatteryChargingState::Type newChargingState);
 
 private:
 
     Talk2WatchInterface* t2w;
     UdpModule *udp;
 
-    QString uuid;
+    QStringList uuid;
 
     bb::device::BatteryInfo* batteryInfo;
+    bb::platform::NotificationGlobalSettings* notificationGlobalSettings;
 
     void authorizeAppWithT2w();
     void triggerBattery();
+    void sendMode();
 
     QStringList title;
     QStringList command;
@@ -82,6 +92,7 @@ private:
     QTranslator* m_translator;
     bb::cascades::LocaleHandler* m_localeHandler;
     bb::system::InvokeManager* m_invokeManager;
+    bb::cascades::Application * myapp;
 };
 
 #endif /* ApplicationUI_HPP_ */

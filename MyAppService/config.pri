@@ -4,9 +4,27 @@ BASEDIR = $$quote($$_PRO_FILE_PWD_)
 device {
     CONFIG(debug, debug|release) {
         profile {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            LIBS += -lbbdevice \
+                -lQtNetwork
+
             CONFIG += \
                 config_pri_source_group1
         } else {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            LIBS += -lbbdevice \
+                -lQtNetwork
+
             CONFIG += \
                 config_pri_source_group1
         }
@@ -15,6 +33,15 @@ device {
 
     CONFIG(release, debug|release) {
         !profile {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            LIBS += -lbbdevice \
+                -lQtNetwork
+
             CONFIG += \
                 config_pri_source_group1
         }
@@ -24,6 +51,15 @@ device {
 simulator {
     CONFIG(debug, debug|release) {
         !profile {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/device) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtNetwork)
+
+            LIBS += -lbbdevice \
+                -lQtNetwork
+
             CONFIG += \
                 config_pri_source_group1
         }
@@ -32,13 +68,24 @@ simulator {
 
 config_pri_source_group1 {
     SOURCES += \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleaction.cpp) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleattribute.cpp) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebblenotification.cpp) \
+        $$quote($$BASEDIR/src/T2W API/Serializer.cpp) \
+        $$quote($$BASEDIR/src/T2W API/Talk2WatchInterface.cpp) \
+        $$quote($$BASEDIR/src/T2W API/UdpModule.cpp) \
         $$quote($$BASEDIR/src/main.cpp) \
         $$quote($$BASEDIR/src/service.cpp)
 
-    HEADERS += $$quote($$BASEDIR/src/service.hpp)
+    HEADERS += \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleaction.h) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleattribute.h) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebblenotification.h) \
+        $$quote($$BASEDIR/src/T2W API/Serializer.h) \
+        $$quote($$BASEDIR/src/T2W API/Talk2WatchInterface.h) \
+        $$quote($$BASEDIR/src/T2W API/UdpModule.h) \
+        $$quote($$BASEDIR/src/service.hpp)
 }
-
-INCLUDEPATH += $$quote($$BASEDIR/src)
 
 CONFIG += precompile_header
 
@@ -50,7 +97,17 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../src/*.c++) \
         $$quote($$BASEDIR/../src/*.cc) \
         $$quote($$BASEDIR/../src/*.cpp) \
-        $$quote($$BASEDIR/../src/*.cxx)
+        $$quote($$BASEDIR/../src/*.cxx) \
+        $$quote($$BASEDIR/../src/T2W API/*.c) \
+        $$quote($$BASEDIR/../src/T2W API/*.c++) \
+        $$quote($$BASEDIR/../src/T2W API/*.cc) \
+        $$quote($$BASEDIR/../src/T2W API/*.cpp) \
+        $$quote($$BASEDIR/../src/T2W API/*.cxx) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.c) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.c++) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.cc) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.cpp) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.cxx)
 
     HEADERS += \
         $$quote($$BASEDIR/../src/*.h) \
