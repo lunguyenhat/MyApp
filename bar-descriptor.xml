@@ -25,7 +25,7 @@
     <!-- A universally unique application identifier. Must be unique across
         all BlackBerry 10 applications. Using a reverse DNS-style name as the id
         is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-    <id>com.example.MyApp</id>
+    <id>com.nhatlu.MyApp</id>
 
     <!-- The name that is displayed in the BlackBerry 10 application installer.
         May have multiple values for each language. See samples or xsd schema file.
@@ -66,9 +66,6 @@
 
         <asset entryPointId="MyApp" path="arm/o.le-v7-g/MyApp"
             entry="true" type="Qnx/Elf">MyApp</asset>
-        <asset entryPointId="MyAppService"
-            path="../MyAppService/arm/MyAppService"
-            type="Qnx/Elf">MyAppService</asset>
     </configuration>
 
     <configuration name="Device-Release">
@@ -77,9 +74,6 @@
 
         <asset entryPointId="MyApp" path="arm/o.le-v7/MyApp.so"
             entry="true" type="Qnx/Cascades">MyApp.so</asset>
-        <asset entryPointId="MyAppService"
-            path="../MyAppService/arm/MyAppService"
-            type="Qnx/Elf">MyAppService</asset>
     </configuration>
 
     <configuration name="Device-Profile">
@@ -88,9 +82,7 @@
 
         <asset entryPointId="MyApp" path="arm-p/o.le-v7-g/MyApp"
             entry="true" type="Qnx/Elf">MyApp</asset>
-        <asset entryPointId="MyAppService"
-            path="../MyAppService/arm/MyAppService"
-            type="Qnx/Elf">MyAppService</asset>
+      
     </configuration>
 
     <configuration name="Simulator-Debug">
@@ -99,47 +91,15 @@
 
         <asset entryPointId="MyApp" path="x86/o-g/MyApp"
             entry="true" type="Qnx/Elf">MyApp</asset>
-        <asset entryPointId="MyAppService"
-            path="../MyAppService/x86/MyAppService"
-            type="Qnx/Elf">MyAppService</asset>
+   
     </configuration>
 
     <entryPoint id="MyApp">
         <name>MyApp</name>
     </entryPoint>
 
-    <entryPoint id="MyAppService">
-        <name>MyApp Service</name>
-        <entryPointType>Qnx/Elf</entryPointType>
-        <!-- Request permission to run a backend headless process. -->
-        <permission system="true">_sys_run_headless</permission>
-        <permission system="true">_sys_headless_nostop</permission>
-    </entryPoint>
 
-    <invoke-target id="com.example.MyAppService">
-        <invoke-target-type>application.headless</invoke-target-type>
-        <invoke-target-name>MyApp Service</invoke-target-name>
-        <entry-point-id>MyAppService</entry-point-id>
-        <filter>
-            <action>bb.action.system.STARTED</action>
-            <mime-type>application/vnd.blackberry.system.event.STARTED</mime-type>
-            <property var="uris" value="data://local" />
-        </filter>
-        <filter>
-            <action>com.example.MyAppService.RESET</action>
-            <mime-type>*</mime-type>
-            <property var="uris" value="headless:" />
-        </filter>
-    </invoke-target>
-
-    <invoke-target id="com.example.MyApp">
-        <invoke-target-type>application</invoke-target-type>
-        <invoke-target-name>MyApp</invoke-target-name>
-        <icon>
-            <image>icon.png</image>
-        </icon>
-        <entry-point-id>MyApp</entry-point-id>
-    </invoke-target>
+    
 
     <!-- Unique author ID assigned by signing authority. Required if using debug
         tokens. -->
@@ -164,8 +124,8 @@
     </asset>
 
     <!-- Request permission to post notification. -->
-    <permission>post_notification</permission>
     <permission>access_notify_settings_control</permission>
+    <permission>post_notification</permission>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib" />
 
 </qnx>

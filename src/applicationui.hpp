@@ -40,6 +40,7 @@ namespace bb {
 
     namespace platform {
         class NotificationGlobalSettings;
+        class Notification;
     }
 
 }
@@ -85,9 +86,7 @@ private:
     void triggerBattery();
     void sendMode();
 
-    QStringList title;
-    QStringList command;
-    QStringList description;
+    bb::platform::Notification * m_notify;
 
     QTranslator* m_translator;
     bb::cascades::LocaleHandler* m_localeHandler;

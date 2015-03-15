@@ -27,6 +27,7 @@
 #include <bb/system/InvokeManager>
 #include <bb/device/BatteryInfo>
 #include <bb/device/BatteryChargingState>
+#include <bb/platform/Notification>
 #include <bb/platform/NotificationGlobalSettings>
 #include <bb/platform/NotificationMode>
 
@@ -85,6 +86,9 @@ ApplicationUI::ApplicationUI(Application *app) :
     udp->listenOnPort(9712); // this number should be changed to a random unused port
 
     notificationGlobalSettings = new NotificationGlobalSettings();
+    m_notify = new Notification();
+    m_notify->setTitle("MyApp");
+    m_notify->setBody("Where are you?");
 
     connect(myapp, SIGNAL(manualExit()), this, SLOT(onManualExit()));
     myapp->setAutoExit(false);
@@ -186,7 +190,14 @@ void ApplicationUI::onAppMessageReceived(const QString &_uuid, const QHash<QStri
                 values.insert("0", value);
                 t2w->sendAppMessage(_uuid, values);
 
+
             }
+        }
+        else if (value == 2) // Find phone
+        {
+            Notification::clearEffectsForAll();
+            Notification::deleteAllFromInbox();
+            m_notify->notify();
         }
         else if (value == 5)
         {
