@@ -153,12 +153,18 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../.git/objects/*.qml) \
         $$quote($$BASEDIR/../.git/objects/*.js) \
         $$quote($$BASEDIR/../.git/objects/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/04/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/04/*.js) \
+        $$quote($$BASEDIR/../.git/objects/04/*.qs) \
         $$quote($$BASEDIR/../.git/objects/07/*.qml) \
         $$quote($$BASEDIR/../.git/objects/07/*.js) \
         $$quote($$BASEDIR/../.git/objects/07/*.qs) \
         $$quote($$BASEDIR/../.git/objects/0b/*.qml) \
         $$quote($$BASEDIR/../.git/objects/0b/*.js) \
         $$quote($$BASEDIR/../.git/objects/0b/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/0d/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/0d/*.js) \
+        $$quote($$BASEDIR/../.git/objects/0d/*.qs) \
         $$quote($$BASEDIR/../.git/objects/0e/*.qml) \
         $$quote($$BASEDIR/../.git/objects/0e/*.js) \
         $$quote($$BASEDIR/../.git/objects/0e/*.qs) \
@@ -213,6 +219,9 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../.git/objects/38/*.qml) \
         $$quote($$BASEDIR/../.git/objects/38/*.js) \
         $$quote($$BASEDIR/../.git/objects/38/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/3a/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/3a/*.js) \
+        $$quote($$BASEDIR/../.git/objects/3a/*.qs) \
         $$quote($$BASEDIR/../.git/objects/3f/*.qml) \
         $$quote($$BASEDIR/../.git/objects/3f/*.js) \
         $$quote($$BASEDIR/../.git/objects/3f/*.qs) \
@@ -246,6 +255,9 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../.git/objects/63/*.qml) \
         $$quote($$BASEDIR/../.git/objects/63/*.js) \
         $$quote($$BASEDIR/../.git/objects/63/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/6e/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/6e/*.js) \
+        $$quote($$BASEDIR/../.git/objects/6e/*.qs) \
         $$quote($$BASEDIR/../.git/objects/72/*.qml) \
         $$quote($$BASEDIR/../.git/objects/72/*.js) \
         $$quote($$BASEDIR/../.git/objects/72/*.qs) \
@@ -366,6 +378,9 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../.git/objects/e6/*.qml) \
         $$quote($$BASEDIR/../.git/objects/e6/*.js) \
         $$quote($$BASEDIR/../.git/objects/e6/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/e9/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/e9/*.js) \
+        $$quote($$BASEDIR/../.git/objects/e9/*.qs) \
         $$quote($$BASEDIR/../.git/objects/ed/*.qml) \
         $$quote($$BASEDIR/../.git/objects/ed/*.js) \
         $$quote($$BASEDIR/../.git/objects/ed/*.qs) \
