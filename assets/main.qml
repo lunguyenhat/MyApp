@@ -18,15 +18,6 @@ import bb.cascades 1.3
 
 Page {
     Container {
-        Label {
-            // Localized text with the dynamic translation and locale updates support
-            text: qsTr("MyApp Service says Hello!") + Retranslate.onLocaleOrLanguageChanged
-        }
-        Button {
-            text: qsTr("Resend Notification") + Retranslate.onLocaleOrLanguageChanged
-            onClicked: {
-                app.resendNotification();
-            }
-        }
+        
     }
 }

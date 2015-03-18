@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QStringList>
 #include <bb/device/BatteryChargingState>
+#include "ActiveFrameQML.h"
 
 class Talk2WatchInterface;
 class UdpModule;
@@ -59,8 +60,6 @@ public:
     ApplicationUI(bb::cascades::Application *app);
     virtual ~ApplicationUI() { }
 
-    Q_INVOKABLE void resendNotification();
-
 private slots:
     void onSystemLanguageChanged();
     void onManualExit();
@@ -82,8 +81,10 @@ private:
     bb::device::BatteryInfo* batteryInfo;
     bb::platform::NotificationGlobalSettings* notificationGlobalSettings;
 
+    ActiveFrameQML *activeFrame;
+
     void authorizeAppWithT2w();
-    void triggerBattery();
+    void triggerBattery(bool first);
     void sendMode();
 
     bb::platform::Notification * m_notify;

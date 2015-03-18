@@ -15,6 +15,7 @@
  */
 
 #include "applicationui.hpp"
+#include "ActiveFrameQML.h"
 
 #include "T2W API/Talk2WatchInterface.h"
 #include "T2W API/UdpModule.h"
@@ -30,6 +31,8 @@
 #include <bb/platform/Notification>
 #include <bb/platform/NotificationGlobalSettings>
 #include <bb/platform/NotificationMode>
+
+
 
 using namespace bb::cascades;
 using namespace bb::system;
@@ -70,6 +73,11 @@ ApplicationUI::ApplicationUI(Application *app) :
     // Make app available to the qml.
     qml->setContextProperty("app", this);
 
+    activeFrame = new ActiveFrameQML();
+    Application::instance()->setCover(activeFrame);
+
+    qml->setContextProperty("activeFrame", activeFrame);
+
     // Create root object for the UI
     AbstractPane *root = qml->createRootObject<AbstractPane>();
 
@@ -92,6 +100,8 @@ ApplicationUI::ApplicationUI(Application *app) :
 
     connect(myapp, SIGNAL(manualExit()), this, SLOT(onManualExit()));
     myapp->setAutoExit(false);
+
+    Application::instance()->minimize();
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -113,15 +123,6 @@ void ApplicationUI::onManualExit()
     }
 
     myapp->quit();
-}
-
-void ApplicationUI::resendNotification()
-{
-    InvokeRequest request;
-    request.setTarget("com.example.MyAppService");
-    request.setAction("com.example.MyAppService.RESET");
-    m_invokeManager->invoke(request);
-    Application::instance()->minimize();
 }
 
 void ApplicationUI::onTransmissionReady()
@@ -155,7 +156,7 @@ void ApplicationUI::onUuidRegistrationSuccess(const QString &_uuid)
 
     if (_uuid == uuid[0])
     {
-        triggerBattery();
+        triggerBattery(true);
     }
 }
 
@@ -163,14 +164,15 @@ void ApplicationUI::onAppMessageReceived(const QString &_uuid, const QHash<QStri
 {
     qDebug() << "onAppMessageReceived";
 
+    int value = _values.values().at(0).toInt();
+
     if (_uuid == uuid[0])
     {
-        triggerBattery();
+        triggerBattery(false);
+        activeFrame->updatePebbleBattery(value);
     }
     else if (_uuid == uuid[1])
     {
-        int value = _values.values().at(0).toInt();
-
         if (value == 0 || value == 1)
         {
             NotificationSettingsError::Type error = NotificationSettingsError::None;
@@ -189,8 +191,6 @@ void ApplicationUI::onAppMessageReceived(const QString &_uuid, const QHash<QStri
                 QHash<QString, QVariant> values;
                 values.insert("0", value);
                 t2w->sendAppMessage(_uuid, values);
-
-
             }
         }
         else if (value == 2) // Find phone
@@ -206,13 +206,22 @@ void ApplicationUI::onAppMessageReceived(const QString &_uuid, const QHash<QStri
     }
 }
 
-void ApplicationUI::triggerBattery()
+void ApplicationUI::triggerBattery(bool first)
 {
     qDebug() << "triggerBattery";
 
     QHash<QString, QVariant> values;
-    values.insert("4", batteryInfo->level());
+
+    values.insert("0", batteryInfo->level());
+
+    if (first)
+    {
+        values.insert("1", 1);
+    }
+
     t2w->sendAppMessage(uuid[0], values);
+
+    activeFrame->updatePhoneBattery(batteryInfo->level());
 }
 
 void ApplicationUI::sendMode()
@@ -241,7 +250,5 @@ void ApplicationUI::onBatteryLevelChanged(int level, BatteryChargingState::Type 
 {
     qDebug() << "onBatteryLevelChanged";
 
-    QHash<QString, QVariant> values;
-    values.insert("4", level);
-    t2w->sendAppMessage(uuid[0], values);
+    triggerBattery(false);
 }
