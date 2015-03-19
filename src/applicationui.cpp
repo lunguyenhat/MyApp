@@ -32,8 +32,6 @@
 #include <bb/platform/NotificationGlobalSettings>
 #include <bb/platform/NotificationMode>
 
-
-
 using namespace bb::cascades;
 using namespace bb::system;
 using namespace bb::device;
@@ -55,13 +53,11 @@ ApplicationUI::ApplicationUI(Application *app) :
     }
 
     t2w = new Talk2WatchInterface(9712, this);
-    //uuid[0] = "688fe407d65c4e8cae57ee7dc3c919c2";
-    //uuid[1] = "5dbac19332da46059990caa467bf5478";
 
     uuid << "688fe407d65c4e8cae57ee7dc3c919c2" << "5dbac19332da46059990caa467bf5478";
 
     batteryInfo = new BatteryInfo();
-    qDebug() << connect(batteryInfo, SIGNAL(levelChanged(int, bb::device::BatteryChargingState::Type)), this, SLOT(onBatteryLevelChanged(int, bb::device::BatteryChargingState::Type)));
+    connect(batteryInfo, SIGNAL(levelChanged(int, bb::device::BatteryChargingState::Type)), this, SLOT(onBatteryLevelChanged(int, bb::device::BatteryChargingState::Type)));
 
     // initial load
     onSystemLanguageChanged();
@@ -74,7 +70,7 @@ ApplicationUI::ApplicationUI(Application *app) :
     qml->setContextProperty("app", this);
 
     activeFrame = new ActiveFrameQML();
-    Application::instance()->setCover(activeFrame);
+    myapp->setCover(activeFrame);
 
     qml->setContextProperty("activeFrame", activeFrame);
 
@@ -82,7 +78,7 @@ ApplicationUI::ApplicationUI(Application *app) :
     AbstractPane *root = qml->createRootObject<AbstractPane>();
 
     // Set created root object as the application scene
-    Application::instance()->setScene(root);
+    myapp->setScene(root);
 
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
     connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
@@ -100,8 +96,6 @@ ApplicationUI::ApplicationUI(Application *app) :
 
     connect(myapp, SIGNAL(manualExit()), this, SLOT(onManualExit()));
     myapp->setAutoExit(false);
-
-    Application::instance()->minimize();
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -110,8 +104,10 @@ void ApplicationUI::onSystemLanguageChanged()
     // Initiate, load and install the application translation files.
     QString locale_string = QLocale().name();
     QString file_name = QString("MyApp_%1").arg(locale_string);
-    if (m_translator->load(file_name, "app/native/qm")) {
-    QCoreApplication::instance()->installTranslator(m_translator);
+
+    if (m_translator->load(file_name, "app/native/qm"))
+    {
+        QCoreApplication::instance()->installTranslator(m_translator);
     }
 }
 
@@ -158,6 +154,8 @@ void ApplicationUI::onUuidRegistrationSuccess(const QString &_uuid)
     {
         triggerBattery(true);
     }
+
+    myapp->minimize();
 }
 
 void ApplicationUI::onAppMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values)

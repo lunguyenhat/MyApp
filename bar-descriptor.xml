@@ -38,7 +38,9 @@
         An updated version of application must have a versionNumber value higher
         than the previous version. Required. -->
     <versionNumber>1.0.0</versionNumber>
-    <platformVersion>10.2.0</platformVersion>
+    <icon>
+       <image>icon.png</image>
+    </icon>
     <authorId>gYAAgPpE4Igm0Dc1X5nDlg9-47Y</authorId>
 
     <!-- Fourth digit segment of the package version. First three segments are
@@ -111,17 +113,14 @@
     </initialWindow>
 
     <!-- The icon for the application, which should be 114x114. -->
-    <icon>
-        <image>icon.png</image>
-    </icon>
 
-    <asset path="icon.png">icon.png</asset>
     <asset path="assets">assets</asset>
 
     <!-- Locale support -->
     <asset path="translations" dest="qm">
         <include name="*.qm" />
     </asset>
+    <asset path="icon.png">icon.png</asset>
 
     <!-- Request permission to post notification. -->
     <permission>access_notify_settings_control</permission>
