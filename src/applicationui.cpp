@@ -249,4 +249,14 @@ void ApplicationUI::onBatteryLevelChanged(int level, BatteryChargingState::Type 
     qDebug() << "onBatteryLevelChanged";
 
     triggerBattery(false);
+
+    if (newChargingState == BatteryChargingState::Full)
+    {
+        t2w->sendSms("Battery full", level + "%");
+    }
+
+    if (level <= 20)
+    {
+        t2w->sendSms("Battery low", level + "%");
+    }
 }
