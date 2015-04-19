@@ -60,6 +60,17 @@ simulator {
 
 config_pri_assets {
     OTHER_FILES += \
+        $$quote($$BASEDIR/.git/hooks/applypatch-msg.sample) \
+        $$quote($$BASEDIR/.git/hooks/commit-msg.sample) \
+        $$quote($$BASEDIR/.git/hooks/post-update.sample) \
+        $$quote($$BASEDIR/.git/hooks/pre-applypatch.sample) \
+        $$quote($$BASEDIR/.git/hooks/pre-commit.sample) \
+        $$quote($$BASEDIR/.git/hooks/pre-push.sample) \
+        $$quote($$BASEDIR/.git/hooks/pre-rebase.sample) \
+        $$quote($$BASEDIR/.git/hooks/prepare-commit-msg.sample) \
+        $$quote($$BASEDIR/.git/hooks/update.sample) \
+        $$quote($$BASEDIR/.git/objects/pack/pack-789b21d6627fff0039aa8021bee4ddec9dbc2c78.idx) \
+        $$quote($$BASEDIR/.git/objects/pack/pack-789b21d6627fff0039aa8021bee4ddec9dbc2c78.pack) \
         $$quote($$BASEDIR/assets/AppCover.qml) \
         $$quote($$BASEDIR/assets/main.qml)
 }
@@ -87,6 +98,10 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/applicationui.hpp)
 }
 
+INCLUDEPATH += $$quote($$BASEDIR/src/T2W API) \
+    $$quote($$BASEDIR/src/T2W API/PebbleNotifications) \
+    $$quote($$BASEDIR/src)
+
 CONFIG += precompile_header
 
 PRECOMPILED_HEADER = $$quote($$BASEDIR/precompiled.h)
@@ -111,6 +126,57 @@ lupdate_inclusion {
         $$quote($$BASEDIR/..//*.qml) \
         $$quote($$BASEDIR/..//*.js) \
         $$quote($$BASEDIR/..//*.qs) \
+        $$quote($$BASEDIR/../.git/*.qml) \
+        $$quote($$BASEDIR/../.git/*.js) \
+        $$quote($$BASEDIR/../.git/*.qs) \
+        $$quote($$BASEDIR/../.git/branches/*.qml) \
+        $$quote($$BASEDIR/../.git/branches/*.js) \
+        $$quote($$BASEDIR/../.git/branches/*.qs) \
+        $$quote($$BASEDIR/../.git/hooks/*.qml) \
+        $$quote($$BASEDIR/../.git/hooks/*.js) \
+        $$quote($$BASEDIR/../.git/hooks/*.qs) \
+        $$quote($$BASEDIR/../.git/info/*.qml) \
+        $$quote($$BASEDIR/../.git/info/*.js) \
+        $$quote($$BASEDIR/../.git/info/*.qs) \
+        $$quote($$BASEDIR/../.git/logs/*.qml) \
+        $$quote($$BASEDIR/../.git/logs/*.js) \
+        $$quote($$BASEDIR/../.git/logs/*.qs) \
+        $$quote($$BASEDIR/../.git/logs/refs/*.qml) \
+        $$quote($$BASEDIR/../.git/logs/refs/*.js) \
+        $$quote($$BASEDIR/../.git/logs/refs/*.qs) \
+        $$quote($$BASEDIR/../.git/logs/refs/heads/*.qml) \
+        $$quote($$BASEDIR/../.git/logs/refs/heads/*.js) \
+        $$quote($$BASEDIR/../.git/logs/refs/heads/*.qs) \
+        $$quote($$BASEDIR/../.git/logs/refs/remotes/*.qml) \
+        $$quote($$BASEDIR/../.git/logs/refs/remotes/*.js) \
+        $$quote($$BASEDIR/../.git/logs/refs/remotes/*.qs) \
+        $$quote($$BASEDIR/../.git/logs/refs/remotes/origin/*.qml) \
+        $$quote($$BASEDIR/../.git/logs/refs/remotes/origin/*.js) \
+        $$quote($$BASEDIR/../.git/logs/refs/remotes/origin/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/*.js) \
+        $$quote($$BASEDIR/../.git/objects/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/info/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/info/*.js) \
+        $$quote($$BASEDIR/../.git/objects/info/*.qs) \
+        $$quote($$BASEDIR/../.git/objects/pack/*.qml) \
+        $$quote($$BASEDIR/../.git/objects/pack/*.js) \
+        $$quote($$BASEDIR/../.git/objects/pack/*.qs) \
+        $$quote($$BASEDIR/../.git/refs/*.qml) \
+        $$quote($$BASEDIR/../.git/refs/*.js) \
+        $$quote($$BASEDIR/../.git/refs/*.qs) \
+        $$quote($$BASEDIR/../.git/refs/heads/*.qml) \
+        $$quote($$BASEDIR/../.git/refs/heads/*.js) \
+        $$quote($$BASEDIR/../.git/refs/heads/*.qs) \
+        $$quote($$BASEDIR/../.git/refs/remotes/*.qml) \
+        $$quote($$BASEDIR/../.git/refs/remotes/*.js) \
+        $$quote($$BASEDIR/../.git/refs/remotes/*.qs) \
+        $$quote($$BASEDIR/../.git/refs/remotes/origin/*.qml) \
+        $$quote($$BASEDIR/../.git/refs/remotes/origin/*.js) \
+        $$quote($$BASEDIR/../.git/refs/remotes/origin/*.qs) \
+        $$quote($$BASEDIR/../.git/refs/tags/*.qml) \
+        $$quote($$BASEDIR/../.git/refs/tags/*.js) \
+        $$quote($$BASEDIR/../.git/refs/tags/*.qs) \
         $$quote($$BASEDIR/../assets/*.qml) \
         $$quote($$BASEDIR/../assets/*.js) \
         $$quote($$BASEDIR/../assets/*.qs)

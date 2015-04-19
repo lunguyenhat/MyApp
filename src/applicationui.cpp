@@ -250,7 +250,7 @@ void ApplicationUI::onBatteryLevelChanged(int level, BatteryChargingState::Type 
 
     triggerBattery(false);
 
-    if (newChargingState == BatteryChargingState::Full)
+    if (newChargingState == BatteryChargingState::Full || level == 100)
     {
         t2w->sendSms("Battery full", level + "%");
     }
