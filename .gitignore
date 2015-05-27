@@ -2,3 +2,5 @@ MyApp/arm/*
 MyApp/config.pri
 MyAppService/arm/*
 MyAppService/config.pri
+MyApp/translations/MyApp.qm
+MyAppService/translations/MyAppService.qm
