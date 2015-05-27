@@ -377,19 +377,16 @@ void Talk2WatchInterface::sendPebbleNotificationAcknowledgment(const QString &_i
 
 void Talk2WatchInterface::onDataReived(const QString &_data)
 {
-	if(m_serializer->isValid(_data))
-	{
-	    QHash<QString, QVariant> data = m_serializer->deserialize(_data);
-	    QString category = data.value("EVENT_CATEGORY").toString();
-	    QString type = data.value("EVENT_TYPE").toString();
+    qDebug() << "__GET__" << _data;
 
-	    data.remove("EVENT_CATEGORY");
-	    data.remove("EVENT_TYPE");
+    QHash<QString, QVariant> data = m_serializer->deserialize(_data);
+    QString category = data.value("EVENT_CATEGORY").toString();
+    QString type = data.value("EVENT_TYPE").toString();
 
-	    handleMessage(type, category, data);
-	}
-	else
-	    emit receivedData(_data);
+    data.remove("EVENT_CATEGORY");
+    data.remove("EVENT_TYPE");
+
+    emit receivedData(type, category, data);
 }
 
 

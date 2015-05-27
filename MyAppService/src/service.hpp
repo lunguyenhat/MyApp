@@ -42,6 +42,7 @@ namespace bb {
 
 class Talk2WatchInterface;
 class UdpModule;
+class Serializer;
 
 class Service: public QObject
 {
@@ -53,13 +54,13 @@ private slots:
     void handleInvoke(const bb::system::InvokeRequest &);
 
     void onTransmissionReady();
-    /*void onAuthSuccess();
+    void onAuthSuccess();
     void onUuidRegistrationSuccess(const QString &_uuid);
-    void onAppMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);*/
+    void onAppMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
 
     void onBatteryLevelChanged(int level, bb::device::BatteryChargingState::Type newChargingState);
 
-    void onUdpDataReceived(QString _data);
+    void onUdpDataReceived(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values);
 
 private:
     bb::system::InvokeManager * m_invokeManager;
@@ -70,6 +71,7 @@ private:
 
     Talk2WatchInterface* t2w;
     UdpModule* udp;
+    Serializer *m_serializer;
 
     QStringList uuid;
 
