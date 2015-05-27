@@ -1,2 +1,4 @@
-/arm
-/config.pri
+MyApp/arm/*
+MyApp/config.pri
+MyAppService/arm/*
+MyAppService/config.pri
