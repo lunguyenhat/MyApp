@@ -24,19 +24,8 @@
 #include <bb/cascades/LocaleHandler>
 #include <bb/system/InvokeManager>
 
-#include <btapi/btdevice.h>
-
 using namespace bb::cascades;
 using namespace bb::system;
-
-/**
- * Callback for events triggered by btdevice APIs.
- */
-//! [1]
-void BTCallback(const int event, const char *bt_addr, const char *event_data)
-{
-
-}
 
 ApplicationUI::ApplicationUI() :
         QObject(),
@@ -68,12 +57,8 @@ ApplicationUI::ApplicationUI() :
     // Set created root object as the application scene
     Application::instance()->setScene(root);
 
-    t2w = new Talk2WatchInterface(8484, this);
+    t2w = new Talk2WatchInterface(-1, this);
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
-
-    // Create UdpModule object, open a UDP port for communicating with T2W and connect to signal
-    //udp = new UdpModule(this);
-    //udp->listenOnPort(9211); // this number should be changed to a random unused port
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -89,10 +74,7 @@ void ApplicationUI::onSystemLanguageChanged()
 
 void ApplicationUI::onTransmissionReady()
 {
-    InvokeRequest request;
-    request.setTarget("com.nhatlu.MyAppService");
-    request.setAction("com.nhatlu.MyAppService.START");
-    m_invokeManager->invoke(request);
+    startHeadless();
 }
 
 void ApplicationUI::resendAuthorization() {

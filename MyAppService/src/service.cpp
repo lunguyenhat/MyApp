@@ -17,6 +17,7 @@
 #include "service.hpp"
 #include "T2W API/Talk2WatchInterface.h"
 #include "T2W API/UdpModule.h"
+#include "T2W API/Serializer.h"
 
 #include <bb/Application>
 #include <bb/system/InvokeManager>
@@ -42,10 +43,12 @@ Service::Service() :
 
     uuid << "688fe407d65c4e8cae57ee7dc3c919c2" << "5dbac19332da46059990caa467bf5478";
 
+    m_serializer = new Serializer(this);
+
     batteryInfo = new BatteryInfo();
     connect(batteryInfo, SIGNAL(levelChanged(int, bb::device::BatteryChargingState::Type)), this, SLOT(onBatteryLevelChanged(int, bb::device::BatteryChargingState::Type)));
 
-    t2w = new Talk2WatchInterface(8484, this);
+    t2w = new Talk2WatchInterface(-1, this);
 
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
     connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
@@ -55,7 +58,7 @@ Service::Service() :
     // Create UdpModule object, open a UDP port for communicating with T2W and connect to signal
     udp = new UdpModule(this);
     udp->listenOnPort(9211); // this number should be changed to a random unused port
-    //connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
+    connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
 
     notificationGlobalSettings = new NotificationGlobalSettings();
     m_notify = new Notification();
@@ -87,11 +90,13 @@ void Service::onTransmissionReady()
 
 void Service::authorizeAppWithT2w()
 {
+    qDebug() << "authorizeAppWithT2w";
+
     // Default to false
     t2wProIsRunning = false;
 
     // T2W authorization request
-    t2w->setAppValues("MyApp", "1.0.0", "MyApp1.0.0", "UPD", "9211", "");
+    t2w->setAppValues("MyAppHL", "1.0.0", "MyApp1.0.0", "UPD", "9211", "");
     t2w->sendAppAuthorizationRequest();
 }
 
@@ -111,89 +116,17 @@ void Service::onUdpDataReceived(QString _data)
 {
     qDebug() << "HL : onUdpDataReceived in..." << _data;
 
-    if (_data == "AUTH_SUCCESS")
+    if(m_serializer->isValid(_data))
     {
-        onAuthSuccess();
+        QHash<QString, QVariant> data = m_serializer->deserialize(_data);
+        QString category = data.value("EVENT_CATEGORY").toString();
+        QString type = data.value("EVENT_TYPE").toString();
+
+        data.remove("EVENT_CATEGORY");
+        data.remove("EVENT_TYPE");
+
+        t2w->handleMessage(type, category, data);
     }
-
-    /*if(_category=="PEBBLE")
-     {
-         if(_type=="APPMESSAGE_RECEIVED")
-         {
-             QHash<QString, QVariant> values = _values;
-             QString uuid = _values.value("uuid").toString();
-             values.remove("uuid");
-
-             onAppMessageReceived(uuid, values);
-         }
-         else if(_type=="APP_STARTED")
-         {}
-         else if(_type=="APP_CLOSED")
-         {}
-     }
-     else if(_category=="PEBBLE_NOTIFICATIONS")
-     {
-         qDebug() << "__EVENT__" << _type; //<< _values;
-
-         QString id = _values.value("id").toString();
-         QString text = _values.value("text").toString();
-
-         if(_type=="DISMISS")
-         {}
-         else if(_type=="GENERIC")
-         {}
-         else if(_type=="RESPONSE")
-         {}
-
-     }
-     else if(_category=="APP_CONNECTION")
-     {
-         qDebug() << "__RX__" << _type << _values;
-
-         QString action = _values.value("action").toString();
-         QString error = _values.value("error").toString();
-         QString folder = _values.value("folder").toString();
-         QString uuid = _values.value("uuid").toString();
-
-         if(_type=="AUTH_SUCCESS")
-         {
-             onAuthSuccess();
-         }
-         else if(_type=="AUTH_ERROR")
-         {}
-         else if(_type=="CREATE_ACTION_SUCCESS")
-         {}
-         else if(_type=="CREATE_ACTION_ERROR")
-         {}
-         else if(_type=="REMOVE_ACTION_SUCCESS")
-         {}
-         else if(_type=="REMOVE_ACTION_ERROR")
-         {}
-         else if(_type=="RENAME_ACTION_SUCCESS")
-         {}
-         else if(_type=="RENAME_ACTION_ERROR")
-         {}
-         else if(_type=="ACTION_TRIGGERED")
-         {}
-         else if(_type=="REMOVE_CONNECTION_SUCCESS")
-         {}
-         else if(_type=="CREATE_FOLDER_SUCCESS")
-         {}
-         else if(_type=="CREATE_FOLDER_ERROR")
-         {}
-         else if(_type=="REMOVE_FOLDER_SUCCESS")
-         {}
-         else if(_type=="REMOVE_FOLDER_ERROR")
-         {}
-         else if(_type=="RENAME_FOLDER_SUCCESS")
-         {}
-         else if(_type=="RENAME_FOLDER_ERROR")
-         {}
-         else if(_type=="REGISTER_UUID_SUCCESS")
-             onUuidRegistrationSuccess(uuid);
-         else if(_type=="DEREGISTER_UUID_SUCCESS")
-         {}
-     }*/
 }
 
 void Service::onUuidRegistrationSuccess(const QString &_uuid)
