@@ -68,12 +68,12 @@ ApplicationUI::ApplicationUI() :
     // Set created root object as the application scene
     Application::instance()->setScene(root);
 
-    t2w = new Talk2WatchInterface(9712, this);
+    t2w = new Talk2WatchInterface(8484, this);
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
 
     // Create UdpModule object, open a UDP port for communicating with T2W and connect to signal
-    udp = new UdpModule(this);
-    udp->listenOnPort(9712); // this number should be changed to a random unused port
+    //udp = new UdpModule(this);
+    //udp->listenOnPort(9211); // this number should be changed to a random unused port
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -89,7 +89,10 @@ void ApplicationUI::onSystemLanguageChanged()
 
 void ApplicationUI::onTransmissionReady()
 {
-    startHeadless();
+    InvokeRequest request;
+    request.setTarget("com.nhatlu.MyAppService");
+    request.setAction("com.nhatlu.MyAppService.START");
+    m_invokeManager->invoke(request);
 }
 
 void ApplicationUI::resendAuthorization() {

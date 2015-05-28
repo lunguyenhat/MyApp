@@ -242,7 +242,7 @@ private:
 
 signals:
 	void transmissionReady();
-	void receivedData(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values); // DEPRECATED - use the signals below
+	void receivedData(QString); // DEPRECATED - use the signals below
 
 	void authSuccess();
 	void authError(const QString &_error);

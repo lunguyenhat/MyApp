@@ -45,17 +45,17 @@ Service::Service() :
     batteryInfo = new BatteryInfo();
     connect(batteryInfo, SIGNAL(levelChanged(int, bb::device::BatteryChargingState::Type)), this, SLOT(onBatteryLevelChanged(int, bb::device::BatteryChargingState::Type)));
 
-    t2w = new Talk2WatchInterface(-1, this);
+    t2w = new Talk2WatchInterface(8484, this);
 
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
-    //connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
-    //connect(t2w, SIGNAL(uuidRegistrationSuccess(QString)), this, SLOT(onUuidRegistrationSuccess(QString)));
-    //connect(t2w, SIGNAL(appMessageReceived(QString, QHash<QString, QVariant>)), this, SLOT(onAppMessageReceived(QString, QHash<QString, QVariant>)));
+    connect(t2w, SIGNAL(authSuccess()), this, SLOT(onAuthSuccess()));
+    connect(t2w, SIGNAL(uuidRegistrationSuccess(QString)), this, SLOT(onUuidRegistrationSuccess(QString)));
+    connect(t2w, SIGNAL(appMessageReceived(QString, QHash<QString, QVariant>)), this, SLOT(onAppMessageReceived(QString, QHash<QString, QVariant>)));
 
     // Create UdpModule object, open a UDP port for communicating with T2W and connect to signal
     udp = new UdpModule(this);
     udp->listenOnPort(9211); // this number should be changed to a random unused port
-    connect(udp, SIGNAL(reveivedData(QString, QString, QHash<QString, QVariant>)), this, SLOT(onUdpDataReceived(QString, QString, QHash<QString, QVariant>)));
+    //connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
 
     notificationGlobalSettings = new NotificationGlobalSettings();
     m_notify = new Notification();
@@ -91,13 +91,13 @@ void Service::authorizeAppWithT2w()
     t2wProIsRunning = false;
 
     // T2W authorization request
-    t2w->setAppValues("MyApp", "1.0.0", "MyApp1.0.0", "UPD", "9712", "");
+    t2w->setAppValues("MyApp", "1.0.0", "MyApp1.0.0", "UPD", "9211", "");
     t2w->sendAppAuthorizationRequest();
 }
 
 void Service::onAuthSuccess()
 {
-    qDebug() << "Auth_Success!!!";
+    qDebug() << "onAuthSuccess";
 
     t2wProIsRunning = true;
 
@@ -107,11 +107,16 @@ void Service::onAuthSuccess()
     }
 }
 
-void Service::onUdpDataReceived(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values)
+void Service::onUdpDataReceived(QString _data)
 {
-    qDebug() << "HL : onUdpDataReceived in..." << _values;
+    qDebug() << "HL : onUdpDataReceived in..." << _data;
 
-    if(_category=="PEBBLE")
+    if (_data == "AUTH_SUCCESS")
+    {
+        onAuthSuccess();
+    }
+
+    /*if(_category=="PEBBLE")
      {
          if(_type=="APPMESSAGE_RECEIVED")
          {
@@ -188,7 +193,7 @@ void Service::onUdpDataReceived(const QString &_type, const QString &_category, 
              onUuidRegistrationSuccess(uuid);
          else if(_type=="DEREGISTER_UUID_SUCCESS")
          {}
-     }
+     }*/
 }
 
 void Service::onUuidRegistrationSuccess(const QString &_uuid)

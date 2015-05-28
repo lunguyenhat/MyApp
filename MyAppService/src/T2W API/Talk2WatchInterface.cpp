@@ -246,15 +246,15 @@ void Talk2WatchInterface::deregisterAppMessageListener(const QString &_uuid)
 // Transmission
 void Talk2WatchInterface::sendCommand(QString _command)
 {
-	/*if(m_talk2WatchProServiceAvailable || m_talk2WatchProAvailable==true)
+	if(m_talk2WatchProServiceAvailable || m_talk2WatchProAvailable==true)
 		m_udp->sendMessage("127.0.0.1", 9877, _command);
 	else if(m_talk2WatchAvailable==true)
 		sendCommandViaInvocation(_command, "com.Talk2Watch.invocation.msg");
 	else
 	{
 		qDebug() << "T2W not found";
-	}*/
-    m_udp->sendMessage("127.0.0.1", 9877, _command);
+	}
+
 }
 
 void Talk2WatchInterface::sendCommandViaInvocation(QString _command, QString _target)
@@ -377,22 +377,24 @@ void Talk2WatchInterface::sendPebbleNotificationAcknowledgment(const QString &_i
 
 void Talk2WatchInterface::onDataReived(const QString &_data)
 {
-    qDebug() << "__GET__" << _data;
+	if(m_serializer->isValid(_data))
+	{
+	    QHash<QString, QVariant> data = m_serializer->deserialize(_data);
+	    QString category = data.value("EVENT_CATEGORY").toString();
+	    QString type = data.value("EVENT_TYPE").toString();
 
-    QHash<QString, QVariant> data = m_serializer->deserialize(_data);
-    QString category = data.value("EVENT_CATEGORY").toString();
-    QString type = data.value("EVENT_TYPE").toString();
+	    data.remove("EVENT_CATEGORY");
+	    data.remove("EVENT_TYPE");
 
-    data.remove("EVENT_CATEGORY");
-    data.remove("EVENT_TYPE");
-
-    emit receivedData(type, category, data);
+	    handleMessage(type, category, data);
+	}
+	else
+	    emit receivedData(_data);
 }
 
 
 void Talk2WatchInterface::onTalk2WatchLookup()
 {
-    m_talk2WatchProAvailable = true;
     bb::system::InvokeQueryTargetsReply *reply = qobject_cast<bb::system::InvokeQueryTargetsReply*>(sender());
     if (reply && reply->error() == bb::system::InvokeReplyError::None)
     {

@@ -60,7 +60,7 @@ private slots:
 
     void onBatteryLevelChanged(int level, bb::device::BatteryChargingState::Type newChargingState);
 
-    void onUdpDataReceived(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values);
+    void onUdpDataReceived(QString _data);
 
 private:
     bb::system::InvokeManager * m_invokeManager;
