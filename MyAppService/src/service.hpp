@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QStringList>
 #include <bb/device/BatteryChargingState>
+#include <bb/platform/NotificationMode>
 
 namespace bb {
     class Application;
@@ -37,6 +38,7 @@ namespace bb {
     namespace platform {
         class NotificationGlobalSettings;
         class Notification;
+        class NotificationMode;
     }
 }
 
@@ -62,11 +64,13 @@ private slots:
 
     void onUdpDataReceived(QString _data);
 
+    void onModeChanged(bb::platform::NotificationMode::Type mode);
+
 private:
     bb::system::InvokeManager * m_invokeManager;
 
     void authorizeAppWithT2w();
-    void triggerBattery(bool first);
+    void triggerWatchApp(bool first);
     void sendMode();
 
     Talk2WatchInterface* t2w;

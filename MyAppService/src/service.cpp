@@ -25,7 +25,6 @@
 #include <bb/device/BatteryChargingState>
 #include <bb/platform/Notification>
 #include <bb/platform/NotificationGlobalSettings>
-#include <bb/platform/NotificationMode>
 
 #include <QTimer>
 
@@ -61,6 +60,8 @@ Service::Service() :
     connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
 
     notificationGlobalSettings = new NotificationGlobalSettings();
+   // connect(notificationGlobalSettings, SIGNAL(modeChanged(NotificationMode::Type)), this, SLOT(onModeChanged(NotificationMode::Type)));
+
     m_notify = new Notification();
     m_notify->setTitle("MyApp");
     m_notify->setBody("Where are you?");
@@ -82,10 +83,9 @@ void Service::handleInvoke(const bb::system::InvokeRequest & request)
 
 void Service::onTransmissionReady()
 {
-    // Checks every minute to make sure T2W is still running
     authorizeAppWithT2w();
 
-    QTimer::singleShot(60000, this, SLOT(onTransmissionReady()));
+    QTimer::singleShot(300000, this, SLOT(onTransmissionReady()));
 }
 
 void Service::authorizeAppWithT2w()
@@ -135,7 +135,7 @@ void Service::onUuidRegistrationSuccess(const QString &_uuid)
 
     if (_uuid == uuid[0])
     {
-        triggerBattery(true);
+        triggerWatchApp(true);
     }
 }
 
@@ -147,11 +147,11 @@ void Service::onAppMessageReceived(const QString &_uuid, const QHash<QString, QV
 
     if (_uuid == uuid[0])
     {
-        triggerBattery(false);
+        triggerWatchApp(false);
     }
     else if (_uuid == uuid[1])
     {
-        if (value == 0 || value == 1)
+        if (value == 0 || value == 1 || value == 2)
         {
             NotificationSettingsError::Type error = NotificationSettingsError::None;
 
@@ -160,6 +160,10 @@ void Service::onAppMessageReceived(const QString &_uuid, const QHash<QString, QV
                 error = notificationGlobalSettings->setMode(NotificationMode::Normal);
             }
             else if(value == 1)
+            {
+                error = notificationGlobalSettings->setMode(NotificationMode::Vibrate);
+            }
+            else if(value == 2)
             {
                 error = notificationGlobalSettings->setMode(NotificationMode::Silent);
             }
@@ -184,11 +188,11 @@ void Service::onAppMessageReceived(const QString &_uuid, const QHash<QString, QV
     }
 }
 
-void Service::triggerBattery(bool first)
+void Service::triggerWatchApp(bool first)
 {
     if (t2wProIsRunning == true)
     {
-        qDebug() << "triggerBattery";
+        qDebug() << "triggerWatchApp";
 
         QHash<QString, QVariant> values;
 
@@ -198,6 +202,25 @@ void Service::triggerBattery(bool first)
         {
             values.insert("1", 1);
         }
+
+        NotificationMode::Type mode = notificationGlobalSettings->mode();
+
+        int value = 0;
+
+        if (mode == NotificationMode::Normal)
+        {
+           value = 0;
+        }
+        else if (mode == NotificationMode::Vibrate)
+        {
+           value = 1;
+        }
+        else if (mode == NotificationMode::Silent)
+        {
+           value = 2;
+        }
+
+        values.insert("2", value);
 
         t2w->sendAppMessage(uuid[0], values);
     }
@@ -217,9 +240,13 @@ void Service::sendMode()
         {
             value = 0;
         }
-        else if (mode == NotificationMode::Silent)
+        else if (mode == NotificationMode::Vibrate)
         {
             value = 1;
+        }
+        else if (mode == NotificationMode::Silent)
+        {
+            value = 2;
         }
 
         QHash<QString, QVariant> values;
@@ -234,16 +261,22 @@ void Service::onBatteryLevelChanged(int level, BatteryChargingState::Type newCha
     {
        qDebug() << "onBatteryLevelChanged";
 
-       triggerBattery(false);
+       triggerWatchApp(false);
 
-       if (newChargingState == BatteryChargingState::Full || level == 100)
+       if (newChargingState == BatteryChargingState::Full)
        {
            t2w->sendSms("Battery full", level + "%");
        }
 
-       if (level <= 20)
+       if (level == 20)
        {
            t2w->sendSms("Battery low", level + "%");
        }
     }
+}
+
+void Service::onModeChanged(NotificationMode::Type mode)
+{
+    qDebug() << "onModeChanged";
+    triggerWatchApp(false);
 }
