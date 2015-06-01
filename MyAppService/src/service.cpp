@@ -60,7 +60,7 @@ Service::Service() :
     connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
 
     notificationGlobalSettings = new NotificationGlobalSettings();
-   // connect(notificationGlobalSettings, SIGNAL(modeChanged(NotificationMode::Type)), this, SLOT(onModeChanged(NotificationMode::Type)));
+    connect(notificationGlobalSettings, SIGNAL(modeChanged(NotificationMode::Type)), this, SLOT(onModeChanged(NotificationMode::Type)));
 
     m_notify = new Notification();
     m_notify->setTitle("MyApp");
