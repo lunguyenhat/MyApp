@@ -60,7 +60,7 @@ Service::Service() :
     connect(udp, SIGNAL(reveivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
 
     notificationGlobalSettings = new NotificationGlobalSettings();
-    connect(notificationGlobalSettings, SIGNAL(modeChanged(NotificationMode::Type)), this, SLOT(onModeChanged(NotificationMode::Type)));
+    connect(notificationGlobalSettings, SIGNAL(modeChanged(bb::platform::NotificationMode::Type)), this, SLOT(onModeChanged(bb::platform::NotificationMode::Type)));
 
     m_notify = new Notification();
     m_notify->setTitle("MyApp");
@@ -275,7 +275,7 @@ void Service::onBatteryLevelChanged(int level, BatteryChargingState::Type newCha
     }
 }
 
-void Service::onModeChanged(NotificationMode::Type mode)
+void Service::onModeChanged(bb::platform::NotificationMode::Type mode)
 {
     qDebug() << "onModeChanged";
     triggerWatchApp(false);
